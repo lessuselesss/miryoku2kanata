@@ -1,0 +1,46 @@
+name: Sync Upstream to Branch
+
+on:
+  schedule:
+    # Run daily at 00:00 UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch: # Allow manual trigger from Actions tab
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout fork
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Add upstream remote
+        env:
+          UPSTREAM_OWNER: "lessuseless-systems"
+          UPSTREAM_REPO: "kanata-miryoku"
+          UPSTREAM_BRANCH: "main"
+        run: |
+          git remote add upstream https://github.com/${UPSTREAM_OWNER}/${UPSTREAM_REPO}.git || true
+          git remote set-url upstream https://github.com/${UPSTREAM_OWNER}/${UPSTREAM_REPO}.git
+
+      - name: Fetch upstream
+        run: git fetch upstream
+
+      - name: Sync upstream to upstream-main branch
+        env:
+          UPSTREAM_BRANCH: "main"
+        run: |
+          # Create or update the upstream-main branch to match upstream
+          git checkout -B upstream-main upstream/${UPSTREAM_BRANCH}
+          git push origin upstream-main --force
+
+      - name: Return to default branch
+        run: git checkout ${{ github.event.repository.default_branch }} || true
