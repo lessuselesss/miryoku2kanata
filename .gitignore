@@ -24,6 +24,3 @@ jtroo-kanata.xml
 *.swo
 *~
 .DS_Store
-
-# Generated directory from earlier
-generated_configs/
