@@ -5,7 +5,15 @@ result-*
 
 # Generated configs (optional - you may want to commit these)
 # Uncomment if you want git to ignore generated configs:
-# miryoku-kanata*.kbd
+# colemakdh/
+# qwerty/
+# dvorak/
+# colemak/
+# colemakdhk/
+# azerty/
+# qwertz/
+# halmak/
+# workman/
 
 # Python
 __pycache__/
